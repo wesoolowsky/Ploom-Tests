@@ -11,11 +11,16 @@ export default defineConfig({
     trace: 'on-first-retry',
     actionTimeout: 30000, 
     navigationTimeout: 30000,
+    launchOptions: {
+      args: ["--start-maximized"],
+    },
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        viewport: null,
+      },
     },
   ],
 });
