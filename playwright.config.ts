@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
-  retries: 0,
+  retries: 1,
   workers: 2,
   reporter: 'html',
   use: {
@@ -11,15 +11,20 @@ export default defineConfig({
     trace: 'on-first-retry',
     actionTimeout: 30000, 
     navigationTimeout: 30000,
+    headless: true,
     launchOptions: {
-      args: ["--start-maximized"],
+      args: [
+        "--no-sandbox", 
+        "--disable-setuid-sandbox", 
+        "--disable-dev-shm-usage"
+      ],
     },
   },
   projects: [
     {
       name: 'chromium',
       use: {
-        viewport: null,
+        ...devices['Desktop Chrome'],
       },
     },
   ],
