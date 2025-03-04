@@ -13,18 +13,14 @@ export default defineConfig({
     navigationTimeout: 30000,
     headless: true,
     launchOptions: {
-      args: [
-        "--no-sandbox", 
-        "--disable-setuid-sandbox", 
-        "--disable-dev-shm-usage"
-      ],
+      args: ["--start-maximized"],
     },
   },
   projects: [
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
+        viewport: null,
       },
     },
   ],
