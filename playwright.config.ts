@@ -54,14 +54,12 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        viewport: null, // Maximize browser window
       }
     },
     {
       name: 'firefox',
       use: { 
         ...devices['Desktop Firefox'],
-        viewport: null
       }
     }
   ]
