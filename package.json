@@ -1,18 +1,22 @@
 {
   "name": "ploom-tests",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Playwright test suite for Ploom",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "test:report": "playwright test --reporter=html",
+    "prepare": "playwright install"
   },
-  "keywords": [],
+  "keywords": ["playwright", "testing"],
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@playwright/test": "^1.50.1",
     "playwright": "^1.50.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
