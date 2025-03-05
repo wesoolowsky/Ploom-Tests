@@ -37,9 +37,6 @@ export default defineConfig({
     actionTimeout: 30000,
     navigationTimeout: 30000,
     
-    // Run tests in headless mode
-    headless: true,
-    
     // Browser launch options
     launchOptions: {
       args: [
@@ -55,20 +52,6 @@ export default defineConfig({
       use: {
         viewport: null,
       },
-    },
-
-    {
-      name: 'firefox',
-      use: {
-        viewport: null,
-      },
-    },
-
-    {
-      name: 'webkit',
-      use: {
-        viewport: null,
-      },
-    },
+    }
   ]
 });
