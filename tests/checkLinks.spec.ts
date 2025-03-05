@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/HomePage';
 import { ShopPage } from '../pages/ShopPage';
 import { Market, markets } from '../config/markets.config';
+import { validateLink, validateImage } from '../utils/validation';
 
 const testMarkets: Market[] = ['uk', 'pl'];
 
 for (const market of testMarkets) {
   test.describe(`Check Links and Images on Product Page - ${market}`, () => {
     test('should validate links and image loading', async ({ page }) => {
-      
       const homePage = new HomePage(page, market);
       await homePage.goToShopPage();
 
@@ -28,17 +28,7 @@ for (const market of testMarkets) {
         const url: string = href.startsWith('http')
           ? href
           : new URL(href, markets[market].baseUrl).href;
-
-        try {
-          const response = await page.request.head(url, { timeout: 10000 });
-          const status: number = response.status();
-          expect(status).toBeGreaterThanOrEqual(200);
-          expect(status).toBeLessThan(400);
-          console.log(`Link ${url} works correctly - status: ${status}`);
-        } catch (error) {
-          console.error(`Error checking link ${url}: ${(error as Error).message}`);
-          throw new Error(`Link ${url} does not work: ${(error as Error).message}`);
-        }
+        await validateLink(page, url);
       }
 
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -54,38 +44,7 @@ for (const market of testMarkets) {
         const imageUrl: string = src.startsWith('http')
           ? src
           : new URL(src, markets[market].baseUrl).href;
-
-        try {
-          const response = await page.request.head(imageUrl, { timeout: 10000 });
-          const status: number = response.status();
-          expect(status).toBeGreaterThanOrEqual(200);
-          expect(status).toBeLessThan(400);
-
-          let isLoaded = await page.evaluate((url: string) => {
-            const img = Array.from(document.querySelectorAll('img')).find(i => i.src === url);
-            return img instanceof HTMLImageElement && img.naturalWidth > 0;
-          }, imageUrl);
-
-          if (!isLoaded) {
-            await page.evaluate((url: string) => {
-              const img = Array.from(document.querySelectorAll('img')).find(i => i.src === url);
-              if (img) img.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, imageUrl);
-            await page.waitForTimeout(1000);
-
-            isLoaded = await page.evaluate((url: string) => {
-              const img = Array.from(document.querySelectorAll('img')).find(i => i.src === url);
-              return img instanceof HTMLImageElement && img.naturalWidth > 0;
-            }, imageUrl);
-          }
-
-          expect(isLoaded, `Image ${imageUrl} did not load even after scrolling`).toBe(true);
-
-          console.log(`Image ${imageUrl} loaded correctly - status: ${status}`);
-        } catch (error) {
-          console.error(`Error checking image ${imageUrl}: ${(error as Error).message}`);
-          throw new Error(`Image ${imageUrl} did not load: ${(error as Error).message}`);
-        }
+        await validateImage(page, imageUrl);
       }
     });
   });
