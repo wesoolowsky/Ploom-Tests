@@ -1,4 +1,3 @@
-// pages/CartPage.ts
 import { Page, Locator } from '@playwright/test';
 
 export class CartPage {
@@ -34,10 +33,10 @@ export class CartPage {
 
   async isProductInCart(): Promise<boolean> {
     try {
-      await this.productInCart.waitFor({ state: 'visible', timeout: 10000 }); // Wait for the product to be visible
+      await this.productInCart.waitFor({ state: 'visible', timeout: 10000 });
       return true;
     } catch (error) {
-      return false; // Return false if the product isn’t found within the timeout
+      return false;
     }
   }
 

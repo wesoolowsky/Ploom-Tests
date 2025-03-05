@@ -1,28 +1,23 @@
-// tests/test3.spec.ts
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/HomePage';
 import { ShopPage } from '../pages/ShopPage';
 import { Market, markets } from '../config/markets.config';
 
-// Markets to test
 const testMarkets: Market[] = ['uk', 'pl'];
 
 for (const market of testMarkets) {
   test.describe(`Check Links and Images on Product Page - ${market}`, () => {
     test('should validate links and image loading', async ({ page }) => {
-      // Initialize HomePage and navigate to shop
+      
       const homePage = new HomePage(page, market);
       await homePage.goToShopPage();
 
-      // Initialize ShopPage and go to product page
       const shopPage = new ShopPage(page, market);
-      const sku = market === 'uk' ? 'ploom-x-advanced' : '15109183'; // SKU depends on market
+      const sku = market === 'uk' ? 'ploom-x-advanced' : '15109183';
       await shopPage.goToProductPage(sku);
 
-      // Wait for page load (using 'load' instead of 'networkidle')
       await page.waitForLoadState('load', { timeout: 15000 });
 
-      // Check links
       const linkHrefs = await page.evaluate(() => {
         return Array.from(document.querySelectorAll('a[href]'))
           .map(link => link.getAttribute('href'))
@@ -46,10 +41,8 @@ for (const market of testMarkets) {
         }
       }
 
-      // Check images
-      // Scroll to load lazy images
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await page.waitForTimeout(2000); // Wait for images to load
+      await page.waitForTimeout(2000);
 
       const imageSrcs = await page.evaluate(() => {
         return Array.from(document.querySelectorAll('img'))
@@ -68,19 +61,17 @@ for (const market of testMarkets) {
           expect(status).toBeGreaterThanOrEqual(200);
           expect(status).toBeLessThan(400);
 
-          // Check if image is loaded in DOM
           let isLoaded = await page.evaluate((url: string) => {
             const img = Array.from(document.querySelectorAll('img')).find(i => i.src === url);
             return img instanceof HTMLImageElement && img.naturalWidth > 0;
           }, imageUrl);
 
-          // If not loaded, scroll to image and wait
           if (!isLoaded) {
             await page.evaluate((url: string) => {
               const img = Array.from(document.querySelectorAll('img')).find(i => i.src === url);
               if (img) img.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, imageUrl);
-            await page.waitForTimeout(1000); // Additional time to load
+            await page.waitForTimeout(1000);
 
             isLoaded = await page.evaluate((url: string) => {
               const img = Array.from(document.querySelectorAll('img')).find(i => i.src === url);

@@ -1,4 +1,3 @@
-// pages/ProductPage.ts
 import { Page, Locator } from '@playwright/test';
 import { markets, Market } from '../config/markets.config';
 
