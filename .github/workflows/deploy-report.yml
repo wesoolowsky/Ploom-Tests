@@ -19,7 +19,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          check-latest: true
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install system dependencies
         run: |

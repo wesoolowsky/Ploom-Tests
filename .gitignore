@@ -11,7 +11,6 @@ logs/
 npm-debug.log*
 
 # Ignore dependency lock files (optional, remove if you want to commit them)
-package-lock.json
 yarn.lock
 
 # Ignore Playwright-specific files
