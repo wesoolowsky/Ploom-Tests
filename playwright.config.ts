@@ -13,15 +13,18 @@ export default defineConfig({
   
   // Run tests in parallel
   fullyParallel: true,
+
+  // Fail the build on CI if you accidentally left test.only in the source code. */
+  forbidOnly: !!process.env.CI,
   
-  // Retry failed tests once
-  retries: 1,
+  // Retry on CI only
+  retries: process.env.CI ? 2 : 0,
   
-  // Use 2 workers for parallel test execution
-  workers: 2,
+  // Opt out of parallel tests on CI.
+  workers: process.env.CI ? 1 : undefined,
   
   // Use HTML reporter
-  reporter: 'html',
+  reporter: [['html', { outputFolder: 'playwright-report' }]],
   
   use: {
     // Base URL for your application
@@ -41,26 +44,25 @@ export default defineConfig({
     launchOptions: {
       args: [
         "--start-maximized",
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage"
       ]
     }
   },
   
-  // Define test projects
+  // Configure projects for major browsers
   projects: [
     {
       name: 'chromium',
-      use: { 
-        ...devices['Desktop Chrome'],
-      }
+      use: { ...devices['Desktop Chrome'] },
     },
+
     {
       name: 'firefox',
-      use: { 
-        ...devices['Desktop Firefox'],
-      }
-    }
+      use: { ...devices['Desktop Firefox'] },
+    },
+
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
   ]
 });
